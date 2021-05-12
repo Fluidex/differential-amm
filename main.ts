@@ -6,14 +6,36 @@ function solveQuadraticEquation(a, b, c) {
   return [root1, root2];
 }
 class DAMM {
-  price: number;
-  depth: number;
+  //price: number;
+  //depth: number;
   realBase: number;
   realQuote: number;
   virtualBase: number; // const
   virtualQuote: number; // const
   k: number; // const
   // spread: number; // default 0.003
+
+  get totalBase() {
+    return this.realBase + this.virtualBase;
+  }
+  get totalQuote() {
+    return this.realQuote + this.virtualQuote;
+  }
+  get price() {
+    return this.totalQuote / this.totalBase;
+  }
+  get depth() {
+    return this.totalBase ** 2 / (2 * this.totalQuote);
+  }
+  get lowPrice() {
+    const low = this.virtualQuote ** 2 / this.k;
+    return low;
+  }
+  get highPrice() {
+    const high = this.k / this.virtualBase ** 2;
+    return high;
+  }
+
   static createFromDepthAndReserve(depth, price, base0, quote0) {
     const totalBase = 2 * price * depth;
     const totalQuote = 2 * price ** 2 * depth;
@@ -21,8 +43,6 @@ class DAMM {
     const virtualBase = totalBase - base0;
     const virtualQuote = totalQuote - quote0;
     let dAMM = new DAMM();
-    dAMM.price = price;
-    dAMM.depth = depth;
     dAMM.realBase = base0;
     dAMM.realQuote = quote0;
     dAMM.virtualBase = virtualBase;
@@ -30,7 +50,12 @@ class DAMM {
     dAMM.k = k;
     return dAMM;
   }
-  static createFromDepthAndRange(depth, price, lowPrice=0, highPrice=Infinity) {
+  static createFromDepthAndRange(
+    depth,
+    price,
+    lowPrice = 0,
+    highPrice = Infinity
+  ) {
     //if (price == null) {
     //  price = Math.sqrt(lowPrice * highPrice);
     //}
@@ -64,8 +89,6 @@ class DAMM {
     const price = totalQuote / totalBase;
     const depth = totalBase ** 2 / (2 * totalQuote);
     let dAMM = new DAMM();
-    dAMM.price = price;
-    dAMM.depth = depth;
     dAMM.realBase = base;
     dAMM.realQuote = quote;
     dAMM.virtualBase = virtualBase;
@@ -77,17 +100,11 @@ class DAMM {
     const k = 4 * p ** 3 * d ** 2;
     return k;
   }
-  totalQuote() {
-    return this.virtualQuote + this.realQuote;
-  }
-  totalBase() {
-    return this.virtualBase + this.realBase;
-  }
   getBaseDiffForQuoteDiff(qouteDiff) {
-    return this.k / (this.totalQuote() + qouteDiff) - this.totalBase();
+    return this.k / (this.totalQuote + qouteDiff) - this.totalBase;
   }
   getQuoteDiffForBaseDiff(baseDiff) {
-    return this.k / (this.totalBase() + baseDiff) - this.totalQuote();
+    return this.k / (this.totalBase + baseDiff) - this.totalQuote;
   }
   getReserveAtPrice(p) {
     const totalBase: number = Math.sqrt(this.k / p);
@@ -109,16 +126,8 @@ class DAMM {
     this.realQuote =
       this.k / (this.realBase + this.virtualBase) - this.virtualQuote;
   }
-  getLowPrice() {
-    const low = this.virtualQuote ** 2 / this.k;
-    return low;
-  }
-  getHighPrice() {
-    const high = this.k / this.virtualBase ** 2;
-    return high;
-  }
   getRange() {
-    return [this.getLowPrice(), this.getHighPrice()];
+    return [this.lowPrice, this.highPrice];
   }
   sellBase(base, dryRun = false) {
     const quote = -this.getQuoteDiffForBaseDiff(base);
@@ -148,7 +157,7 @@ class DAMM {
     // sell orders
     let sellOrders = [];
     for (let i = 1; i <= num; i++) {
-      if (this.price + i * interval > this.getHighPrice()) {
+      if (this.price + i * interval > this.highPrice) {
         break;
       }
       const {
@@ -165,7 +174,7 @@ class DAMM {
     }
     let buyOrders = [];
     for (let i = 1; i <= num; i++) {
-      if (this.price - i * interval < this.getLowPrice()) {
+      if (this.price - i * interval < this.lowPrice) {
         break;
       }
       const {
@@ -218,4 +227,19 @@ function test() {
   dAMM4.buyBase(8.4);
   dAMM4.buyBase(8.4);
 }
-test();
+function test2() {
+  // https://github.com/Fluidex/dingir-exchange/issues/138
+  let dAMM = DAMM.createFromDepthAndRange(
+    8.394814025505184,
+    3445.4497187900683
+  );
+  console.log(dAMM.price);
+  console.log(dAMM.depth);
+  console.log(dAMM.lowPrice);
+  console.log(dAMM.highPrice);
+  console.log(dAMM.realBase);
+  console.log(dAMM.realQuote);
+  console.log(dAMM.virtualBase);
+  console.log(dAMM.virtualQuote);
+}
+test2();
