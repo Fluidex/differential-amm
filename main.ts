@@ -241,5 +241,9 @@ function test2() {
   console.log(dAMM.realQuote);
   console.log(dAMM.virtualBase);
   console.log(dAMM.virtualQuote);
+  dAMM.buyBase(80);
+  console.log(dAMM.toOrders(1, 7));
 }
-test2();
+if (typeof require !== "undefined" && require.main === module) {
+  test2();
+}
