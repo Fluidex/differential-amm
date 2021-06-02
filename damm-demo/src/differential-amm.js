@@ -70,9 +70,19 @@ export default class DAMM {
     return this.createFromDepthAndReserve(depth, price, realBase, realQuote);
   }
   static createFromRangeAndReserve(lowPrice, highPrice, base0, quote0) {
+    if (highPrice === Infinity) {
+      // highPrice being Infinity means virtualBase equals to 0
+      let a = 1;
+      let b = -lowPrice * base0;
+      let c = -lowPrice * base0 * quote0;
+      let roots = solveQuadraticEquation(a, b, c);
+      let virtualQuote = roots[0];
+      let virtualBase = 0;
+      return this.createFromReserve(base0, quote0, virtualBase, virtualQuote);
+    }
     const avgPrice = Math.sqrt(lowPrice * highPrice);
     // solve virtualBase
-    // h0 * virtualBase**2 == virtualQuote**2 / l0 == (virtualBase+base0) * (virtualQuote+quote0)
+    // highPrice * virtualBase**2 == virtualQuote**2 / lowPrice == (virtualBase+base0) * (virtualQuote+quote0)
     // so, virtualBase * avgPrice == virtualQuote
     let a = avgPrice - highPrice;
     let b = base0 * avgPrice + quote0;
