@@ -70,9 +70,19 @@ class DAMM {
     return this.createFromDepthAndReserve(depth, price, realBase, realQuote);
   }
   static createFromRangeAndReserve(lowPrice, highPrice, base0, quote0) {
+    if (highPrice === Infinity) {
+      // highPrice being Infinity means virtualBase equals to 0
+      let a = 1;
+      let b = -lowPrice * base0;
+      let c = -lowPrice * base0 * quote0;
+      let roots = solveQuadraticEquation(a, b, c);
+      let virtualQuote = roots[0];
+      let virtualBase = 0;
+      return this.createFromReserve(base0, quote0, virtualBase, virtualQuote);
+    }
     const avgPrice = Math.sqrt(lowPrice * highPrice);
     // solve virtualBase
-    // h0 * virtualBase**2 == virtualQuote**2 / l0 == (virtualBase+base0) * (virtualQuote+quote0)
+    // highPrice * virtualBase**2 == virtualQuote**2 / lowPrice == (virtualBase+base0) * (virtualQuote+quote0)
     // so, virtualBase * avgPrice == virtualQuote
     let a = avgPrice - highPrice;
     let b = base0 * avgPrice + quote0;
@@ -153,6 +163,17 @@ class DAMM {
     if (!dryRun) this.updateQuote(quote);
     return base;
   }
+  printDetails() {
+    console.log("price", this.price);
+    console.log("depth", this.depth);
+    console.log("lowPrice", this.lowPrice);
+    console.log("highPrice", this.highPrice);
+    console.log("realBase", this.realBase);
+    console.log("realQuote", this.realQuote);
+    console.log("virtualBase", this.virtualBase);
+    console.log("virtualQuote", this.virtualQuote);
+  }
+
   toOrders(interval, num) {
     // sell orders
     let sellOrders = [];
@@ -215,6 +236,13 @@ function test() {
     3450.219511942017
   );
   console.log(dAMM3.realQuote, dAMM3.realBase);
+}
+function testRangeAndReserve() {
+  let dAMM = DAMM.createFromDepthAndRange(
+    0.01226089783918187,
+    1631.2019121541375
+  );
+  dAMM.printDetails();
   let dAMM4 = DAMM.createFromRangeAndReserve(
     3439.920183499634,
     3450.219511942017,
@@ -226,6 +254,20 @@ function test() {
   dAMM4.buyBase(8.4);
   dAMM4.buyBase(8.4);
   dAMM4.buyBase(8.4);
+  let dAMM5 = DAMM.createFromRangeAndReserve(
+    3439.920183499634,
+    Infinity,
+    40,
+    160000
+  );
+  console.log("DAMM5");
+  dAMM5.printDetails();
+  let dAMM6 = DAMM.createFromRangeAndReserve(0, Infinity, 40, 160000);
+  console.log("DAMM6");
+  dAMM6.printDetails();
+  let dAMM7 = DAMM.createFromRangeAndReserve(0, 3450.219511942017, 40, 160000);
+  console.log("DAMM7");
+  dAMM7.printDetails();
 }
 function test2() {
   // https://github.com/Fluidex/dingir-exchange/issues/138
@@ -245,5 +287,5 @@ function test2() {
   console.log(dAMM.toOrders(1, 7));
 }
 if (typeof require !== "undefined" && require.main === module) {
-  test2();
+  testRangeAndReserve();
 }
