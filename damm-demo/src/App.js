@@ -79,10 +79,12 @@ function App(props) {
     }
 
     if (isAutoComputing) {
+      console.log(low, high, base, quote)
       const newDamm = DAMM.createFromRangeAndReserve(low, high, base, quote)
       setDamm(newDamm)
       setPrice(newDamm.price)
       setDepth(newDamm.depth)
+      console.log(newDamm.price, newDamm.depth)
 
       //updateOrderBook(damm)
     } 
@@ -363,7 +365,7 @@ function App(props) {
         />
         <Table showHeader={false} columns={columns} scroll={{y: 280}} bordered size={'small'}
         dataSource={ adjustedBuyOrders } 
-         pagination={false} style={{...styles.table, borderTop: '2px solid #2593fc'}} 
+         pagination={false} style={{...styles.table, borderTop: '0px solid #2593fc'}} 
          />
       </div>
     )
@@ -474,7 +476,7 @@ function App(props) {
   const onSellingEthChanged = (value) => {
     setSellingEth(value)
 
-    const usd = damm.sellBase(sellingEth, true) 
+    const usd = damm.sellBase(value, true) 
     setSellingUsd(usd)
 
     setAverage(value > 0 ? usd / value : 0)
