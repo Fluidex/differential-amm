@@ -14,6 +14,8 @@ i18n.use(initReactI18next).init({
         tokenAmount: 'amount',
         price: 'price',
         depth: 'depth',
+        customizePriceRange: 'customize price range',
+        customizeTokenAmount: 'customize token amount',
       },
     },
     zh: {
@@ -25,6 +27,8 @@ i18n.use(initReactI18next).init({
         tokenAmount: '做市资金量',
         price: '盘口价格',
         depth: '盘口深度',
+        customizePriceRange: '自定义做市价格范围',
+        customizeTokenAmount: '自定义做市资金量',
       },
     },
   },
