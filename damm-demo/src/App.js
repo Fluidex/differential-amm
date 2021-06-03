@@ -192,25 +192,25 @@ function App(props) {
     return (
         <div>
           <div style={styles.row}>
-            <Text style={styles.label}>盘口价</Text>
+            <Text style={styles.label}>{t('price')}</Text>
             <InputField style={styles.input} readOnly={true} min={0} value={price} onChange={setPrice} />
             <Text>USD</Text>
           </div>
           <div style={styles.row}>
-            <Text style={styles.label}>盘口深度</Text>
+            <Text style={styles.label}>{t('depth')}</Text>
             <InputField style={styles.input} readOnly={true} min={0} value={depth} onChange={setDepth} />
             <Text>ETH/USD</Text>
           </div>
           <div style={styles.row}>
-            <Text style={styles.label}>最低价</Text>
+            <Text style={styles.label}>{t('minPrice')}</Text>
             <InputField style={{...styles.input}} min={0} value={low} onChange={setLow} />
             <Text>USD</Text>
-            <Text style={{marginLeft: 60}}>最高价</Text>
+            <Text style={{marginLeft: 60}}>{t('maxPrice')}</Text>
             <InputField style={{...styles.input}} min={1} value={high} onChange={setHigh}/>
             <Text>USD</Text>
           </div>
           <div style={styles.row}>
-            <Text style={styles.label}>做市资金量</Text>
+            <Text style={styles.label}>{t('tokenAmount')}</Text>
             <InputField style={{...styles.input}} min={0} value={base} onChange={setBase} />
             <Text style={styles.label}>ETH</Text>
             <InputField style={{...styles.input, marginLeft: 80}} value={quote} onChange={setQuote}/>
@@ -227,17 +227,17 @@ function App(props) {
     return (
         <div>
           <div style={styles.row}>
-            <Text style={styles.label}>盘口价</Text>
+            <Text style={styles.label}>{t('price')}</Text>
             <InputField style={styles.input} min={0} value={price} onChange={onPriceChanged} />
             <Text>USD</Text>
           </div>
           <div style={styles.row}>
-            <Text style={styles.label}>盘口深度</Text>
+            <Text style={styles.label}>{t('depth')}</Text>
             <InputField style={styles.input} min={0} value={depth} onChange={onDepthChanged} />
             <Text>ETH/USD</Text>
           </div>
           <div style={styles.row}>
-            <Text style={styles.label} >最低价</Text>
+            <Text style={styles.label} >{t('minPrice')}</Text>
             <InputField readOnly={!customizePrice} style={{...styles.input}} min={0} value={low} onChange={onLowPriceChanged} 
             onBlur={() => {
               if (low >= price) {
@@ -246,7 +246,7 @@ function App(props) {
             }}
             />
             <Text>USD</Text>
-            <Text style={{marginLeft: 60}}>最高价</Text>
+            <Text style={{marginLeft: 60}}>{t('maxPrice')}</Text>
             <InputField readOnly={!customizePrice} style={{...styles.input}} min={1} value={high} onChange={onHighPriceChanged}
             onBlur={() => {
               if (high <= price) {
@@ -256,15 +256,15 @@ function App(props) {
             />
             <Text>USD</Text>
           </div>
-          <Checkbox disabled={customizeAmount} style={styles.check} onChange={onCustomizePriceChanged}>自定义价格范围</Checkbox>
+          <Checkbox disabled={customizeAmount} style={styles.check} onChange={onCustomizePriceChanged}>{t('customizePriceRange')}</Checkbox>
           <div style={styles.row}>
-            <Text style={styles.label}>做市资金量</Text>
+            <Text style={styles.label}>{t('tokenAmount')}</Text>
             <InputField readOnly={!customizeAmount} style={{...styles.input}} value={base} onChange={onBaseChanged} />
             <Text style={styles.label}>ETH</Text>
             <InputField readOnly={!customizeAmount} style={{...styles.input, marginLeft: 80}} min={0} value={quote} onChange={onQuoteChanged}/>
             <Text>USD</Text>
           </div>
-          <Checkbox disabled={customizePrice} style={styles.check} onChange={onCustomizeAmountChanged}>自定义资金量</Checkbox>
+          <Checkbox disabled={customizePrice} style={styles.check} onChange={onCustomizeAmountChanged}>{t('customizeTokenAmount')}</Checkbox>
         </div>
     )
   }
@@ -501,11 +501,11 @@ function App(props) {
     <div className="App">
       <div style={styles.paramPanel}>
         <Tabs defaultActiveKey="0" onChange={onChangeTab}>
-          <TabPane tab={t('autoComputePrice')} key="0">
-            {buildAutoComputing()}
-          </TabPane>
           <TabPane tab={t('setPrice')} key="1">
             {buildManualInput()}
+          </TabPane>
+          <TabPane tab={t('autoComputePrice')} key="0">
+            {buildAutoComputing()}
           </TabPane>
         </Tabs>
         <div style={styles.line} />
