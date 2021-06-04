@@ -205,7 +205,7 @@ function App(props) {
             <Text style={styles.label}>{t('minPrice')}</Text>
             <InputField style={{...styles.input}} min={0} value={low} onChange={setLow} />
             <Text>USD</Text>
-            <Text style={{marginLeft: 60}}>{t('maxPrice')}</Text>
+            <Text style={{...styles.label, marginLeft: 60}}>{t('maxPrice')}</Text>
             <InputField style={{...styles.input}} min={1} value={high} onChange={setHigh}/>
             <Text>USD</Text>
           </div>
@@ -213,7 +213,7 @@ function App(props) {
             <Text style={styles.label}>{t('tokenAmount')}</Text>
             <InputField style={{...styles.input}} min={0} value={base} onChange={setBase} />
             <Text style={styles.label}>ETH</Text>
-            <InputField style={{...styles.input, marginLeft: 80}} value={quote} onChange={setQuote}/>
+            <InputField style={{...styles.input, marginLeft: 110}} value={quote} onChange={setQuote}/>
             <Text>USD</Text>
           </div>
         </div>
@@ -246,7 +246,7 @@ function App(props) {
             }}
             />
             <Text>USD</Text>
-            <Text style={{marginLeft: 60}}>{t('maxPrice')}</Text>
+            <Text style={{...styles.label, marginLeft: 60}}>{t('maxPrice')}</Text>
             <InputField readOnly={!customizePrice} style={{...styles.input}} min={1} value={high} onChange={onHighPriceChanged}
             onBlur={() => {
               if (high <= price) {
@@ -261,7 +261,7 @@ function App(props) {
             <Text style={styles.label}>{t('tokenAmount')}</Text>
             <InputField readOnly={!customizeAmount} style={{...styles.input}} value={base} onChange={onBaseChanged} />
             <Text style={styles.label}>ETH</Text>
-            <InputField readOnly={!customizeAmount} style={{...styles.input, marginLeft: 80}} min={0} value={quote} onChange={onQuoteChanged}/>
+            <InputField readOnly={!customizeAmount} style={{...styles.input, marginLeft: 110}} min={0} value={quote} onChange={onQuoteChanged}/>
             <Text>USD</Text>
           </div>
           <Checkbox disabled={customizePrice} style={styles.check} onChange={onCustomizeAmountChanged}>{t('customizeTokenAmount')}</Checkbox>
