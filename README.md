@@ -9,4 +9,4 @@ A differential-amm demo, proposed in <https://www.fluidex.io/en/blog/damm/>
 ![2021-06-06T03-51-01](https://user-images.githubusercontent.com/37070449/120911975-0848b280-c6be-11eb-876f-b9d770b8d487.gif)
 
 ## and ...
-try playing it [here](www.fluidex.io/differential-amm/)!
+try playing it [here](https://www.fluidex.io/differential-amm/)!
